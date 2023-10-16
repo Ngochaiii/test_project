@@ -13,7 +13,6 @@
 </head>
 
 <body>
-
     <div class="container-scroller">
         @include('layouts.web.nav')
         @include('layouts.web.breadcrumb')
@@ -30,7 +29,7 @@
         </div>
     </div>
     @include('layouts.web.footer_js')
-    @stack('fjs')
+    @stack('footer_js')
 </body>
 
 </html>
