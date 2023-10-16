@@ -21,6 +21,7 @@ class CreateCustommersTable extends Migration
             $table->string('city');
             $table->string('district');
             $table->string('specific_address');
+            $table->tinyInteger('status')->default(0)->index();
             $table->timestamps();
         });
     }

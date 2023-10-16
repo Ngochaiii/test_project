@@ -9,7 +9,7 @@ class Custommer extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name', 'email', 'phone', 'quantity',
-       'city', 'district',  'specific_address', 'pro_image'
+        'name', 'email', 'phone',
+       'city', 'district',  'specific_address'
    ];
 }

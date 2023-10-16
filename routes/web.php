@@ -4,8 +4,10 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CategoryProductsController;
+use App\Http\Controllers\CustommerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -55,5 +57,18 @@ Route::group(['prefix' => '', 'middleware' => 'checklogin'], function () {
         Route::get('/{id}/edit', [ProductsController::class, 'edit'])->name('product.edit');
         Route::post('/{id}/edit', [ProductsController::class, 'update'])->name('product.update');
         Route::post('/add', [ProductsController::class, 'store'])->name('product.add');
+    });
+    Route::group(['prefix' => 'customers'], function () {
+        Route::get('/', [CustommerController::class, 'index'])->name('customers');
+        route::get('/create', [CustommerController::class, 'create'])->name('customers.create');
+        route::post('/create', [CustommerController::class, 'store'])->name('customers.store');
+        Route::get('/{key}/edit', [CustommerController::class, 'edit'])->name('customers.edit');
+        Route::post('/{key}/edit', [CustommerController::class, 'update'])->name('customers.update');
+        Route::post('/{key}/delete', [CustommerController::class, 'delete'])->name('customers.delete');
+    });
+    Route::group(['prefix' => 'users'], function () {
+        Route::get('/', [UserController::class, 'index'])->name('users');
+        Route::get('/change/{id}', [UserController::class, 'change'])->name('grant_benefits');
+        Route::get('/delete/{id}', [UserController::class, 'delete'])->name('delete_grant_benefits');
     });
 });

@@ -5,7 +5,7 @@
         <p>
             <a href="{{route('category.show')}}" class="btn btn-primary">
                 <i class="fa fa fa-plus-square-o"></i>
-                Thêm bài viết
+                Tạo mới
             </a>
         </p>
     </div>
@@ -13,9 +13,6 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Danh mục sản phẩm</h4>
-                <p class="card-description">
-                    Add class <code>.table</code>
-                </p>
                 <div class="table-responsive">
                     <table class="table">
                         <thead>

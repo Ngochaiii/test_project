@@ -41,7 +41,7 @@ class CategoryProductsController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-        $validated = $request->validate([
+         $request->validate([
             'name' => 'required|max:255',
         ]);
 

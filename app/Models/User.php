@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_active'
     ];
 
     /**
@@ -41,4 +42,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    const ROLE_MOD = 0;
+    const ROLE_ADMIN = 1;
+    const ROLES_ARR = [
+        self::ROLE_ADMIN,
+        self::ROLE_MOD
+    ];
+    const ROLES = [
+        self::ROLE_ADMIN => 'Admin',
+        self::ROLE_MOD => 'Mod'
+    ];
+
+    public function getIsActiveNameAttribute()
+    {
+        return self::ROLES[$this->is_active];
+    }
 }

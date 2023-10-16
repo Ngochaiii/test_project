@@ -4,82 +4,125 @@ namespace App\Http\Controllers;
 
 use App\Models\Custommer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 class CustommerController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public static function getFilters(array $request = [])
     {
-        //
-    }
+        $accepts = [
+            'name', 'email', 'phone',
+            'city', 'district',  'specific_address',
+        ];
+        $filters = [];
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+        foreach ($accepts as $col) {
+            $filters[$col] = Arr::get($request, $col);
+        } //end foreach
+
+        return $filters;
+    }
+    private static function getCustomers(array $filters = [], $limit = 10)
+    {
+        extract($filters);
+        $data = Custommer::query();
+        if (!is_null($name)) {
+            $data->where('name', 'LIKE',  "%" . $name . "%");
+        } //end if
+        if (!is_null($email)) {
+            $data->where('email',  $email);
+        } //end if
+        if (!is_null($phone)) {
+            $data->where('phone',  $phone);
+        } //end if
+        if (!is_null($city)) {
+            $data->where('city', 'LIKE',  "%" . $city . "%");
+        } //end if
+        if (!is_null($district)) {
+            $data->where('district', 'LIKE',  "%" . $district . "%");
+        } //end if
+
+        return $data->orderBy('id', 'desc')->paginate($limit);
+    }
+    private static function findCustomer(int $id)
+    {
+        return Custommer::find($id);
+    }
+    public function index(Request $request)
+    {
+        $filters = self::getFilters($request->toArray());
+        $compacts = [
+            'siteTitle' => 'Danh sách khách hàng',
+            "customers" => self::getCustomers($filters),
+            "filters" => $filters,
+        ];
+
+        return view('web.customers.index', $compacts);
+    }
     public function create()
     {
-        //
+        $compacts = [
+            'siteTitle' => 'Thêm khách hàng',
+            'form_data' => new Custommer()
+        ];
+        return view('web.customers.edit', $compacts);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|string|email|max:255|unique:users',
+            'phone'  => 'required|numeric|digits:10',
+            // 'password_confirm' => 'required|same:password'
+        ]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Custommer  $custommer
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Custommer $custommer)
-    {
-        //
-    }
+        $customer = new Custommer();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Custommer  $custommer
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Custommer $custommer)
-    {
-        //
-    }
+        $customer->name = $request->name;
+        $customer->email = $request->email;
+        $customer->phone = $request->phone;
+        $customer->city = $request->city;
+        $customer->district = $request->district;
+        $customer->specific_address = $request->city .''. $request->district .''. $request->specific_address;
+        if ($request->created_at) {
+            $customer->created_at = $request->created_at;
+        } //end if
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Custommer  $custommer
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Custommer $custommer)
-    {
-        //
-    }
+        $customer->save();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Custommer  $custommer
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Custommer $custommer)
+        return redirect()->route('customers')->with('success', 'Thành công');
+    }
+    public function edit(int $id)
     {
-        //
+        $customer = self::findCustomer($id);
+        if (!$customer) {
+            abort(404);
+        } //end if
+        $compacts = [
+            'siteTitle' => " Cập nhập thông tin khách hàng " ,
+            'form_data' => $customer
+        ];
+        return view('web.customers.edit', $compacts);
+    }
+    public function update(int $id, Request $request)
+    {
+        $posts = self::findCustomer($id);
+
+        if (!$posts) {
+            abort(404);
+        } //end if
+
+        $posts->name = $request->name;
+        $posts->email = $request->email;
+        $posts->phone = $request->phone;
+        $posts->city = $request->city;
+        $posts->district = $request->district;
+        $posts->specific_address = $request->specific_address .''. $request->district .''. $request->city ;
+        if ($request->created_at) {
+            $posts->created_at = $request->created_at;
+        }
+        $posts->save();
+        return redirect()->route('customers')->with('success', 'Thành công');
     }
 }

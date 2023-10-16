@@ -57,6 +57,10 @@ class ProductsController extends Controller
     public function index()
     {
         $categories = CategoryProducts::all();
+
+        // if ($categories->isEmpty()) {
+        //     return redirect()->route('category.add')->with('success', 'Thành công');
+        // }
         $compacts = [
             'categories' => $categories
         ];
@@ -201,7 +205,7 @@ class ProductsController extends Controller
      * @param  \App\Models\Products  $products
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Products $products , int $id)
+    public function destroy(Products $products, int $id)
     {
         DB::table('products')->where('product_id', $id)->delete();
         return redirect()->route('product.list')->with('success', 'Thành công');

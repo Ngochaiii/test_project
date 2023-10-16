@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'admin@gmail.com',
                 'password' => bcrypt('admin123'),
                 'role' => '1',
+                'is_active' => '1',
             ]
         ]);
         for ($i = 2; $i <= 5; $i++) {
@@ -28,6 +29,7 @@ class DatabaseSeeder extends Seeder
                     'email' => $i . 'user@gmail.com',
                     'password' => bcrypt('admin123'),
                     'role' => '0',
+                    'is_active' => '0',
                 ]
             ]);
         }
