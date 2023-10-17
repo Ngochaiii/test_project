@@ -31,7 +31,7 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="file" name="pro_image[]" accept="image/png, image/gif, image/jpeg"
+                                        <input type="file" name="images[]" accept="image/png, image/gif, image/jpeg"
                                             id="images" placeholder="Choose images" multiple>
                                     </div>
                                     @error('images')

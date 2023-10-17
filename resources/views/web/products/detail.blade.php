@@ -18,7 +18,7 @@
                                     @foreach ($dataImageProducts as $item => $image)
 
                                             <div class="tab-pane active" id="pic-{{ $item }}"><img
-                                                    src="{{ asset('/files/' . $image) }}" /></div>
+                                                    src="{{ asset('/posts/image/' . $image) }}" /></div>
 
                                     @endforeach
                                 @endif
@@ -27,7 +27,7 @@
                                 @if (is_array($dataImageProducts) || is_object($dataImageProducts))
                                     @foreach ($dataImageProducts as $item => $image)
                                         <li class="active"><a data-target="#pic-{{ $item }}" data-toggle="tab"><img
-                                                    src="{{ asset('/files/' . $image) }}" /></a></li>
+                                                    src="{{ asset('/posts/image/' . $image) }}" /></a></li>
                                     @endforeach
                                 @endif
                             </ul>

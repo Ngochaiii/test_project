@@ -88,30 +88,29 @@ class ProductsController extends Controller
         // dd($request->all());
         $this->validate($request, [
             'name' => 'required',
-            'pro_image' => 'required',
-            'pro_image.*' => 'mimes:png,jpg'
+            'images' => 'required',
+            'images.*' => 'mimes:png,jpg'
         ]);
-        $data = array();
-        if ($request->hasfile('pro_image')) {
-            foreach ($request->file('pro_image') as $index => $file) {
-                $name = time() . '.' . $file->extension();
-                $file->move(public_path() . '/files/', $name);
-                $data[] =$name;
+        $images = array();
+        if ($files = $request->file('images')) {
+            foreach ($files as $file) {
+                $name = $file->getClientOriginalName();
+                $file->move('posts/image', $name);
+                $images[] = $name;
             }
-            // dd($data);
         }
         $products = new Products();
         $products->cate_id = $request->cate_id;
         $products->name = $request->name;
         $products->slug = Str::slug($request->name, '-');
-        $products->pro_image = json_encode($data);
+        $products->pro_image = json_encode($images);
         $products->description = $request->description;
         $products->quantity = $request->quantity;
         $products->price = $request->price;
         $products->sale_price = $request->sale_price;
         $products->save();
 
-        return redirect()->route('product')->with('success', 'Thành công');
+        return redirect()->route('product.list')->with('success', 'Thành công');
     }
 
     /**
@@ -175,22 +174,21 @@ class ProductsController extends Controller
         } //end if
         $this->validate($request, [
             'name' => 'required',
-            'pro_image' => 'required',
-            'pro_image.*' => 'mimes:png,jpg'
+            'images' => 'required',
+            'images.*' => 'mimes:png,jpg'
         ]);
-        $data = [];
-        $files = $request->pro_image;
-        if ($request->hasfile('pro_image')) {
-            foreach ($request->file('pro_image') as $index => $file) {
-                $name = time() . '.' . $file->extension();
-                $file->move(public_path() . '/files/', $name);
-                $data[$index] = $name;
+        $images = array();
+        if ($files = $request->file('images')) {
+            foreach ($files as $file) {
+                $name = $file->getClientOriginalName();
+                $file->move('posts/image', $name);
+                $images[] = $name;
             }
         }
         $product->cate_id = $request->cate_id;
         $product->name = $request->name;
         $product->slug = Str::slug($request->name, '-');
-        $product->pro_image = json_encode($data);
+        $product->pro_image = json_encode($images);
         $product->description = $request->description;
         $product->quantity = $request->quantity;
         $product->price = $request->price;
