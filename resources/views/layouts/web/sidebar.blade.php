@@ -1,4 +1,4 @@
-<nav class="sidebar sidebar-offcanvas" id="sidebar">
+<nav class="sidebar sidebar-offcanvas" id="sidebar" style="width:300px">
     <ul class="nav">
         <li class="nav-item">
             <a class="nav-link" href="{{route('home')}}">

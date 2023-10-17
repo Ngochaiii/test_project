@@ -57,10 +57,10 @@ class ProductsController extends Controller
     public function index()
     {
         $categories = CategoryProducts::all();
-
-        // if ($categories->isEmpty()) {
-        //     return redirect()->route('category.add')->with('success', 'Thành công');
-        // }
+        // dd($categories->isEmpty());
+        if ($categories->isEmpty()) {
+            return redirect()->route('category.show')->with('alert', 'Chưa có danh mục sản phẩm');
+        }
         $compacts = [
             'categories' => $categories
         ];
@@ -85,19 +85,20 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $this->validate($request, [
             'name' => 'required',
             'pro_image' => 'required',
             'pro_image.*' => 'mimes:png,jpg'
         ]);
-        $data = [];
-        $files = $request->pro_image;
+        $data = array();
         if ($request->hasfile('pro_image')) {
             foreach ($request->file('pro_image') as $index => $file) {
                 $name = time() . '.' . $file->extension();
                 $file->move(public_path() . '/files/', $name);
-                $data[$index] = $name;
+                $data[] =$name;
             }
+            // dd($data);
         }
         $products = new Products();
         $products->cate_id = $request->cate_id;

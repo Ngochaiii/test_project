@@ -16,8 +16,10 @@
                             <div class="preview-pic tab-content">
                                 @if (is_array($dataImageProducts) || is_object($dataImageProducts))
                                     @foreach ($dataImageProducts as $item => $image)
-                                        <div class="tab-pane active" id="pic-{{ $item }}"><img
-                                                src="{{ asset('/files/' . $image) }}" /></div>
+
+                                            <div class="tab-pane active" id="pic-{{ $item }}"><img
+                                                    src="{{ asset('/files/' . $image) }}" /></div>
+
                                     @endforeach
                                 @endif
                             </div>
@@ -37,7 +39,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <input type="file" name="pro_image[]"
-                                                accept="image/png, image/gif, image/jpeg" id="images"
+                                                accept="images/png, images/gif, images/jpeg" id="images"
                                                 placeholder="Choose images" multiple>
                                         </div>
                                         @error('images')
@@ -86,7 +88,8 @@
                                     votes)</strong>
                             </p>
                             <label for="exampleInputCity1">số lượng sản phẩm</label>
-                            <input type="number" class="form-control" value="{{$products->quantity}}" name="quantity" placeholder="quantity">
+                            <input type="number" class="form-control" value="{{ $products->quantity }}" name="quantity"
+                                placeholder="quantity">
                             <div class="action">
                                 <button class="add-to-cart btn btn-default" type="submit">update</button>
                                 <button class="like btn btn-default" type="button"><span

@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoryProductsController;
 use App\Http\Controllers\CustommerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -63,6 +64,9 @@ Route::group(['prefix' => '', 'middleware' => 'checklogin'], function () {
         route::get('/create', [CustommerController::class, 'create'])->name('customers.create');
         route::post('/create', [CustommerController::class, 'store'])->name('customers.store');
         Route::get('/{key}/edit', [CustommerController::class, 'edit'])->name('customers.edit');
+        Route::get('/{key}/change', [CustommerController::class, 'change'])->name('customers.change');
+        Route::get('/{key}/cancel', [CustommerController::class, 'cancel'])->name('customers.cancel');
+        Route::get('/{key}/show', [CustommerController::class, 'show'])->name('customers.show');
         Route::post('/{key}/edit', [CustommerController::class, 'update'])->name('customers.update');
         Route::post('/{key}/delete', [CustommerController::class, 'delete'])->name('customers.delete');
     });
@@ -70,5 +74,8 @@ Route::group(['prefix' => '', 'middleware' => 'checklogin'], function () {
         Route::get('/', [UserController::class, 'index'])->name('users');
         Route::get('/change/{id}', [UserController::class, 'change'])->name('grant_benefits');
         Route::get('/delete/{id}', [UserController::class, 'delete'])->name('delete_grant_benefits');
+        Route::get('/mail', [TaskController::class, 'index'])->name('index');
+        Route::post('/task', [TaskController::class, 'store'])->name('store.task');
+        Route::delete('/task/{id}', [TaskController::class, 'delete'])->name('delete.task');
     });
 });

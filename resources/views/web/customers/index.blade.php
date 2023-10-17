@@ -24,6 +24,7 @@
                                 <th>Thành phố</th>
                                 <th>Quận/huyện</th>
                                 <th>Địa chỉ cụ thể</th>
+                                <th>Trạng thái</th>
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
@@ -37,13 +38,17 @@
                                     <td>{{ $item->city }}</td>
                                     <td>{{ $item->district }}</td>
                                     <td>{{ $item->specific_address }} </td>
+                                    <td>{{ $item->statusName }}</td>
                                     <td>
-                                        <a href="{{ route('customers.edit', $item->id) }}" class="btn btn-primary btn-sm mb-2 mr-2">
+                                        <a href="{{ route('customers.edit', $item->id) }}"
+                                            class="btn btn-primary btn-sm mb-2 mr-2">
                                             Cập nhật
                                         </a>
-                                        <a href="" target="_blank" class="btn btn-info btn-sm mb-2 mr-2">
-                                            Gửi mail
-                                        </a>
+                                        @if ($item->status != 1)
+                                            <a href="{{ route('customers.show', $item->id) }}"
+                                                class="btn btn-primary btn-sm mb-2 mr-2">Gửi mail </a>
+                                        @endif
+
                                     </td>
                                 </tr>
                             @endforeach

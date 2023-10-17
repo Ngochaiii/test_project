@@ -56,6 +56,7 @@ class CustommerController extends Controller
             'siteTitle' => 'Danh sách khách hàng',
             "customers" => self::getCustomers($filters),
             "filters" => $filters,
+            "customer_status" => Custommer::STATUSES,
         ];
 
         return view('web.customers.index', $compacts);
@@ -124,5 +125,31 @@ class CustommerController extends Controller
         }
         $posts->save();
         return redirect()->route('customers')->with('success', 'Thành công');
+    }
+    public function change(int $id)
+    {
+        $customer = self::findCustomer($id);
+        if($customer) {
+            $customer->status = 1;
+            $customer->save();
+            return redirect()->route('customers')->with('success', 'Thành công');
+        }
+    }
+    public function show(int $id)
+    {
+        $customer = self::findCustomer($id);
+        $compacts = [
+            'customer' => $customer
+        ];
+      return view('web.customers.sendmail', $compacts);
+    }
+    public function cancel(int $id)
+    {
+        $customer = self::findCustomer($id);
+        if($customer) {
+            $customer->status = 2;
+            $customer->save();
+            return redirect()->route('customers')->with('success', 'Thành công');
+        }
     }
 }
