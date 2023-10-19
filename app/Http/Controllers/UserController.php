@@ -56,17 +56,20 @@ class UserController extends Controller
 
         return view('web.users.index', $compacts);
     }
-    public function change(int $id)
+    public function change(Request $request,int $id)
     {
+        $data = array();
+        $status = $request->all();
+        // dd($request->all(),array_values($status));
+        $data = $status;
+        // dd($data);
         $user = auth()->user()->role;
-        $user_active = auth()->user()->is_active;
-        if ( $user_active != 1 ) {
-
+        if ( $user != 1 ) {
             return redirect()->back()->with('alert', 'Bạn chưa được cấp quyền chỉnh sửa');
         }
         $user = self::findUser($id);
         if($user) {
-            $user->is_active = 1;
+            $user->is_active = json_encode($data);
             $user->save();
             return redirect()->route('users')->with('success', 'Thành công');
         }

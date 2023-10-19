@@ -90,10 +90,9 @@
                             <label for="exampleInputCity1">số lượng sản phẩm</label>
                             <input type="number" class="form-control" value="{{ $products->quantity }}" name="quantity"
                                 placeholder="quantity">
-                            <div class="action">
+                            <div class="action mt-2">
                                 <button class="add-to-cart btn btn-default" type="submit">update</button>
-                                <button class="like btn btn-default" type="button"><span
-                                        class="fa fa-heart">Delete</span></button>
+
                             </div>
                         </div>
                     </div>

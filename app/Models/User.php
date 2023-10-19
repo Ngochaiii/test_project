@@ -21,7 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'is_active'
+        'is_active',
+        'role'
     ];
 
     /**
@@ -55,6 +56,6 @@ class User extends Authenticatable
 
     public function getIsActiveNameAttribute()
     {
-        return self::ROLES[$this->is_active];
+        return self::ROLES[$this->role];
     }
 }

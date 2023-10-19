@@ -89,7 +89,10 @@ class ProductsController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'images' => 'required',
-            'images.*' => 'mimes:png,jpg'
+            'images.*' => 'mimes:png,jpg',
+            'price' => 'required|numeric|between:0,9999999999.99',
+            'quantity' => 'required|numeric|between:0,9999999999.99',
+            'sale_price' => 'required|numeric|between:0,9999999999.99',
         ]);
         $images = array();
         if ($files = $request->file('images')) {
@@ -175,7 +178,10 @@ class ProductsController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'images' => 'required',
-            'images.*' => 'mimes:png,jpg'
+            'images.*' => 'mimes:png,jpg',
+            'price' => 'required|numeric|between:0,9999999999.99',
+            'quantity' => 'required|numeric|between:0,9999999999.99',
+            'sale_price' => 'required|numeric|between:0,9999999999.99',
         ]);
         $images = array();
         if ($files = $request->file('images')) {

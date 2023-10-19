@@ -27,7 +27,7 @@ class LoginController extends Controller
             return redirect()->intended('/');
         }
 
-        return redirect('login')->with('error', 'Oppes! You have entered invalid credentials');
+        return redirect('login')->with('error', 'Oppes! Bạn đã nhập thông tin đăng nhập không hợp lệ');
     }
 
     public function logout()

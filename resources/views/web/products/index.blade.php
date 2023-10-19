@@ -8,11 +8,14 @@
                 <p class="card-description">
                     Thêm sản phẩm
                 </p>
-                <form class="forms-sample" action="{{ route('product.add') }}"  method="POST" enctype="multipart/form-data">
+                <form class="forms-sample" action="{{ route('product.add') }}" method="POST" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="form-group">
                         <label for="exampleInputName1">Name</label>
                         <input type="text" name="name" class="form-control" id="exampleInputName1" placeholder="Name">
+                        @if ($errors->has('name'))
+                            <span class="text-danger">{{ $errors->first('name') }}</span>
+                        @endif
                     </div>
                     <div class="form-group">
                         <label for="exampleSelectGender">Danh mục sản phẩm</label>
@@ -50,15 +53,24 @@
                     <div class="form-group">
                         <label for="exampleInputCity1">số lượng sản phẩm</label>
                         <input type="number" class="form-control" name="quantity" placeholder="quantity">
+                        @if ($errors->has('quantity'))
+                            <span class="text-danger">{{ $errors->first('quantity') }}</span>
+                        @endif
                     </div>
                     <div class="form-group">
                         <label for="exampleInputCity1">giá </label>
-                        <input type="number" class="form-control" name="price" placeholder="price">
+                        <input type="number" class="form-control" name="price" placeholder="price" pattern='[0-9]+(\\.[0-9][0-9]?)?'>
                     </div>
+                    @if ($errors->has('price'))
+                        <span class="text-danger">{{ $errors->first('price') }}</span>
+                    @endif
                     <div class="form-group">
                         <label for="exampleInputCity1">giá sale</label>
-                        <input type="number" class="form-control" name="sale_price" placeholder="sale_price">
+                        <input type="number" class="form-control" name="sale_price" placeholder="sale_price" pattern='[0-9]+(\\.[0-9][0-9]?)?'>
                     </div>
+                    @if ($errors->has('sale_price'))
+                        <span class="text-danger">{{ $errors->first('sale_price') }}</span>
+                    @endif
                     <div class="form-group">
                         <label for="exampleTextarea1">Mô tả</label>
                         <textarea name="description" class="form-control" id="exampleTextarea1" rows="4"></textarea>

@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row">
-
+        {{-- {{dd(Auth::user())}} --}}
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
@@ -13,31 +13,60 @@
                                 <th>#</th>
                                 <th>Tên người dùng</th>
                                 <th>Email</th>
+                                <th>Trạng thái</th>
                                 <th>Chức năng</th>
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($users as $key => $item)
+                                @php
+                                    $status = json_decode($item->is_active, true);
+                                    // dd($status['add']);
+                                @endphp
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->email }}</td>
                                     <td>{{ $item->is_activeName }} </td>
-                                    @if ($item->is_active == 0)
+                                    <form action="{{ route('grant_benefits', $item->id) }}" method="post">
+                                        {{ csrf_field() }}
                                         <td>
-                                            <a href="{{route('grant_benefits',$item->id)}}" class="btn btn-primary btn-sm mb-2 mr-2">
-                                                Cập nhật quyền
-                                            </a>
+                                            @if ($item->role != 1)
+                                                <div class="" style="display: grid;">
+                                                    <span>
+                                                        <input type="checkbox" name="add" value="1"
+                                                            @if (isset($status['add'])) checked @endif>
+
+                                                        Thêm</span>
+                                                    <span><input style="margin-top:5px" type="checkbox" name="edit"
+                                                            value="2" @if (isset($status['edit'])) checked @endif>
+                                                        Sửa </span>
+                                                    <span><input style="margin-top:5px" type="checkbox" name="delete"
+                                                            value="3" @if (isset($status['delete'])) checked @endif>
+                                                        Xóa</span>
+                                                </div>
+                                            @endif
+                                            @if ($item->role == 1)
+                                                <div class="" style="display: grid;">
+                                                    <span><input type="checkbox" disabled="disabled" checked="checked">
+                                                        Thêm</span>
+                                                    <span><input type="checkbox" disabled="disabled" checked="checked"> Sửa
+                                                    </span>
+                                                    <span><input type="checkbox" disabled="disabled" checked="checked">
+                                                        Xóa</span>
+                                                </div>
+                                            @endif
                                         </td>
-                                    @endif
-                                    @if ($item->is_active == 1 && $item->role == 0)
                                         <td>
-                                            <a href="{{route('delete_grant_benefits',$item->id)}}" class="btn btn-primary btn-sm mb-2 mr-2">
-                                                Hủy quyền
-                                            </a>
+                                            @if ($item->role != 1)
+                                                <button type="submit" class="btn btn-primary btn-sm mb-2 mr-2">
+                                                    Cập nhật quyền
+                                                </button>
+                                            @endif
+
                                         </td>
-                                    @endif
+                                    </form>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -50,3 +79,12 @@
         </div>
     </div>
 @endsection
+@push('footer_js')
+    <script>
+        var msg = '{{ Session::get('alert') }}';
+        var exist = '{{ Session::has('alert') }}';
+        if (exist) {
+            alert(msg);
+        }
+    </script>
+@endpush

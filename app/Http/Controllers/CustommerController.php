@@ -6,6 +6,7 @@ use App\Models\Custommer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 
 class CustommerController extends Controller
 {
@@ -63,11 +64,17 @@ class CustommerController extends Controller
     }
     public function create()
     {
-        $compacts = [
-            'siteTitle' => 'Thêm khách hàng',
-            'form_data' => new Custommer()
-        ];
-        return view('web.customers.edit', $compacts);
+        $user = Auth::user();
+        $status = json_decode($user->is_active, true);
+        // dd($status);
+        if ($user->role == 1 || isset($status['add'])) {
+            $compacts = [
+                'siteTitle' => 'Thêm khách hàng',
+                'form_data' => new Custommer()
+            ];
+            return view('web.customers.edit', $compacts);
+        }
+        return redirect()->back()->with('alert', 'Bạn chưa được cấp quyền chỉnh sửa');
     }
     public function store(Request $request)
     {
@@ -85,7 +92,7 @@ class CustommerController extends Controller
         $customer->phone = $request->phone;
         $customer->city = $request->city;
         $customer->district = $request->district;
-        $customer->specific_address = $request->city .''. $request->district .''. $request->specific_address;
+        $customer->specific_address = $request->city . '' . $request->district . '' . $request->specific_address;
         if ($request->created_at) {
             $customer->created_at = $request->created_at;
         } //end if
@@ -96,18 +103,24 @@ class CustommerController extends Controller
     }
     public function edit(int $id)
     {
-        $customer = self::findCustomer($id);
-        if (!$customer) {
-            abort(404);
-        } //end if
-        $compacts = [
-            'siteTitle' => " Cập nhập thông tin khách hàng " ,
-            'form_data' => $customer
-        ];
-        return view('web.customers.edit', $compacts);
+        $user = Auth::user();
+        $status = json_decode($user->is_active, true);
+        if ($user->role == 1 || isset($status['edit'])) {
+            $customer = self::findCustomer($id);
+            if (!$customer) {
+                abort(404);
+            } //end if
+            $compacts = [
+                'siteTitle' => " Cập nhập thông tin khách hàng ",
+                'form_data' => $customer
+            ];
+            return view('web.customers.edit', $compacts);
+        }
+        return redirect()->back()->with('alert', 'Bạn chưa được cấp quyền chỉnh sửa');
     }
     public function update(int $id, Request $request)
     {
+
         $posts = self::findCustomer($id);
 
         if (!$posts) {
@@ -119,7 +132,7 @@ class CustommerController extends Controller
         $posts->phone = $request->phone;
         $posts->city = $request->city;
         $posts->district = $request->district;
-        $posts->specific_address = $request->specific_address .''. $request->district .''. $request->city ;
+        $posts->specific_address = $request->specific_address . '' . $request->district . '' . $request->city;
         if ($request->created_at) {
             $posts->created_at = $request->created_at;
         }
@@ -129,7 +142,7 @@ class CustommerController extends Controller
     public function change(int $id)
     {
         $customer = self::findCustomer($id);
-        if($customer) {
+        if ($customer) {
             $customer->status = 1;
             $customer->save();
             return redirect()->route('customers')->with('success', 'Thành công');
@@ -141,15 +154,19 @@ class CustommerController extends Controller
         $compacts = [
             'customer' => $customer
         ];
-      return view('web.customers.sendmail', $compacts);
+        return view('web.customers.sendmail', $compacts);
     }
     public function cancel(int $id)
     {
-        $customer = self::findCustomer($id);
-        if($customer) {
-            $customer->status = 2;
-            $customer->save();
-            return redirect()->route('customers')->with('success', 'Thành công');
+        $user = Auth::user();
+        $status = json_decode($user->is_active, true);
+        if ($user->role == 1 || isset($status['delete'])) {
+            $customer = self::findCustomer($id);
+            if ($customer) {
+                $customer->status = 2;
+                $customer->save();
+                return redirect()->route('customers')->with('success', 'Thành công');
+            }
         }
     }
 }

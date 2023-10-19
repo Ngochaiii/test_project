@@ -72,7 +72,7 @@ Route::group(['prefix' => '', 'middleware' => 'checklogin'], function () {
     });
     Route::group(['prefix' => 'users'], function () {
         Route::get('/', [UserController::class, 'index'])->name('users');
-        Route::get('/change/{id}', [UserController::class, 'change'])->name('grant_benefits');
+        Route::post('/change/{id}', [UserController::class, 'change'])->name('grant_benefits');
         Route::get('/delete/{id}', [UserController::class, 'delete'])->name('delete_grant_benefits');
         Route::get('/mail', [TaskController::class, 'index'])->name('index');
         Route::post('/task', [TaskController::class, 'store'])->name('store.task');
