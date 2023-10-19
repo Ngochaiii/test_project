@@ -22,7 +22,8 @@
                             @foreach ($users as $key => $item)
                                 @php
                                     $status = json_decode($item->is_active, true);
-                                    // dd($status['add']);
+                                    $module = json_decode($item->module, true);
+                                    // dd(is_null($module['customer']))
                                 @endphp
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
@@ -33,28 +34,32 @@
                                         {{ csrf_field() }}
                                         <td>
                                             @if ($item->role != 1)
-                                                <div class="" style="display: grid;">
-                                                    <span>
-                                                        <input type="checkbox" name="add" value="1"
-                                                            @if (isset($status['add'])) checked @endif>
+                                                <div class="d-flex">
+                                                    <div class="" style="display: grid;">
+                                                        <span>
+                                                            <input type="checkbox" name="add" value="1"
+                                                                @if (isset($status['add'])) checked @endif>
 
-                                                        Thêm</span>
-                                                    <span><input style="margin-top:5px" type="checkbox" name="edit"
-                                                            value="2" @if (isset($status['edit'])) checked @endif>
-                                                        Sửa </span>
-                                                    <span><input style="margin-top:5px" type="checkbox" name="delete"
-                                                            value="3" @if (isset($status['delete'])) checked @endif>
-                                                        Xóa</span>
-                                                </div>
-                                            @endif
-                                            @if ($item->role == 1)
-                                                <div class="" style="display: grid;">
-                                                    <span><input type="checkbox" disabled="disabled" checked="checked">
-                                                        Thêm</span>
-                                                    <span><input type="checkbox" disabled="disabled" checked="checked"> Sửa
-                                                    </span>
-                                                    <span><input type="checkbox" disabled="disabled" checked="checked">
-                                                        Xóa</span>
+                                                            Thêm</span>
+                                                        <span><input style="margin-top:5px" type="checkbox" name="edit"
+                                                                value="2"
+                                                                @if (isset($status['edit'])) checked @endif>
+                                                            Sửa </span>
+                                                        <span><input style="margin-top:5px" type="checkbox" name="delete"
+                                                                value="3"
+                                                                @if (isset($status['delete'])) checked @endif>
+                                                            Xóa</span>
+                                                    </div>
+                                                    <div class=""style="display: grid;padding-left:15px">
+                                                        <label for="">Cho tính năng</label>
+
+                                                        <span><input style="margin-top:5px" type="checkbox" name="product"
+                                                                value="2" @if (isset($module['product'])) checked @endif>
+                                                            QL sản phẩm </span>
+                                                        <span><input style="margin-top:5px" type="checkbox" name="customer"
+                                                                value="3"@if (isset($module['customer'])) checked @endif>
+                                                            QL Khách hàng</span>
+                                                    </div>
                                                 </div>
                                             @endif
                                         </td>

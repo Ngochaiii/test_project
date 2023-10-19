@@ -42,33 +42,36 @@ Route::post('reset-password', 'Auth\ResetPasswordController@updatePassword');
 
 Route::group(['prefix' => '', 'middleware' => 'checklogin'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
-
-    Route::group(['prefix' => 'category'], function () {
-        Route::get('/', [CategoryProductsController::class, 'index'])->name('category');
-        Route::get('/create', [CategoryProductsController::class, 'show'])->name('category.show');
-        Route::post('/add', [CategoryProductsController::class, 'store'])->name('category.add');
-        Route::get('/edit/{id}/', [CategoryProductsController::class, 'edit'])->name('category.edit');
-        Route::post('/edit/{id}/', [CategoryProductsController::class, 'update'])->name('category.update');
-        Route::get('/delete/{id}', [CategoryProductsController::class, 'destroy'])->name('category.delete');
+    Route::group(['middleware' => ['moduleProduct']], function () {
+        Route::group(['prefix' => 'category'], function () {
+            Route::get('/', [CategoryProductsController::class, 'index'])->name('category');
+            Route::get('/create', [CategoryProductsController::class, 'show'])->name('category.show');
+            Route::post('/add', [CategoryProductsController::class, 'store'])->name('category.add');
+            Route::get('/edit/{id}/', [CategoryProductsController::class, 'edit'])->name('category.edit');
+            Route::post('/edit/{id}/', [CategoryProductsController::class, 'update'])->name('category.update');
+            Route::get('/delete/{id}', [CategoryProductsController::class, 'destroy'])->name('category.delete');
+        });
+        Route::group(['prefix' => 'product'], function () {
+            Route::get('/', [ProductsController::class, 'index'])->name('product');
+            Route::get('/list', [ProductsController::class, 'show'])->name('product.list');
+            Route::get('/delete/{id}', [ProductsController::class, 'destroy'])->name('product.delete');
+            Route::get('/{id}/edit', [ProductsController::class, 'edit'])->name('product.edit');
+            Route::post('/{id}/edit', [ProductsController::class, 'update'])->name('product.update');
+            Route::post('/add', [ProductsController::class, 'store'])->name('product.add');
+        });
     });
-    Route::group(['prefix' => 'product'], function () {
-        Route::get('/', [ProductsController::class, 'index'])->name('product');
-        Route::get('/list', [ProductsController::class, 'show'])->name('product.list');
-        Route::get('/delete/{id}', [ProductsController::class, 'destroy'])->name('product.delete');
-        Route::get('/{id}/edit', [ProductsController::class, 'edit'])->name('product.edit');
-        Route::post('/{id}/edit', [ProductsController::class, 'update'])->name('product.update');
-        Route::post('/add', [ProductsController::class, 'store'])->name('product.add');
-    });
-    Route::group(['prefix' => 'customers'], function () {
-        Route::get('/', [CustommerController::class, 'index'])->name('customers');
-        route::get('/create', [CustommerController::class, 'create'])->name('customers.create');
-        route::post('/create', [CustommerController::class, 'store'])->name('customers.store');
-        Route::get('/{key}/edit', [CustommerController::class, 'edit'])->name('customers.edit');
-        Route::get('/{key}/change', [CustommerController::class, 'change'])->name('customers.change');
-        Route::get('/{key}/cancel', [CustommerController::class, 'cancel'])->name('customers.cancel');
-        Route::get('/{key}/show', [CustommerController::class, 'show'])->name('customers.show');
-        Route::post('/{key}/edit', [CustommerController::class, 'update'])->name('customers.update');
-        Route::post('/{key}/delete', [CustommerController::class, 'delete'])->name('customers.delete');
+    Route::group(['middleware' => ['moduleCustomer']], function () {
+        Route::group(['prefix' => 'customers'], function () {
+            Route::get('/', [CustommerController::class, 'index'])->name('customers');
+            route::get('/create', [CustommerController::class, 'create'])->name('customers.create');
+            route::post('/create', [CustommerController::class, 'store'])->name('customers.store');
+            Route::get('/{key}/edit', [CustommerController::class, 'edit'])->name('customers.edit');
+            Route::get('/{key}/change', [CustommerController::class, 'change'])->name('customers.change');
+            Route::get('/{key}/cancel', [CustommerController::class, 'cancel'])->name('customers.cancel');
+            Route::get('/{key}/show', [CustommerController::class, 'show'])->name('customers.show');
+            Route::post('/{key}/edit', [CustommerController::class, 'update'])->name('customers.update');
+            Route::post('/{key}/delete', [CustommerController::class, 'delete'])->name('customers.delete');
+        });
     });
     Route::group(['middleware' => ['admin']], function () {
         Route::group(['prefix' => 'users'], function () {

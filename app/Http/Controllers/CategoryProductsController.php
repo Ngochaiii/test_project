@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CategoryProducts;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CategoryProductsController extends Controller
@@ -19,7 +20,7 @@ class CategoryProductsController extends Controller
         $compacts = [
             'cates' => $cates,
         ];
-        return view('web.cate_products.index',$compacts);
+        return view('web.cate_products.index', $compacts);
     }
 
     /**
@@ -41,7 +42,7 @@ class CategoryProductsController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-         $request->validate([
+        $request->validate([
             'name' => 'required|max:255',
         ]);
 
@@ -61,7 +62,13 @@ class CategoryProductsController extends Controller
      */
     public function show(CategoryProducts $category_Products)
     {
-        return view('web.cate_products.create');
+        $user = Auth::user();
+        $status = json_decode($user->is_active, true);
+        // dd($status);
+        if ($user->role == 1 || isset($status['add'])) {
+            return view('web.cate_products.create');
+        }
+        return redirect()->back()->with('alert', 'Bạn chưa được cấp quyền chỉnh sửa');
     }
 
     /**
@@ -70,13 +77,18 @@ class CategoryProductsController extends Controller
      * @param  \App\Models\Category_Products  $category_Products
      * @return \Illuminate\Http\Response
      */
-    public function edit(CategoryProducts $category_Products,int $id)
+    public function edit(CategoryProducts $category_Products, int $id)
     {
-        $dataCate = CategoryProducts::where('cate_id', $id)->first();
-        $compacts = [
-            'dataCate' => $dataCate
-        ];
-        return view('web.cate_products.detail',$compacts);
+        $user = Auth::user();
+        $status = json_decode($user->is_active, true);
+        if ($user->role == 1 || isset($status['edit'])) {
+            $dataCate = CategoryProducts::where('cate_id', $id)->first();
+            $compacts = [
+                'dataCate' => $dataCate
+            ];
+            return view('web.cate_products.detail', $compacts);
+        }
+        return redirect()->back()->with('alert', 'Bạn chưa được cấp quyền chỉnh sửa');
     }
 
     /**
@@ -86,7 +98,7 @@ class CategoryProductsController extends Controller
      * @param  \App\Models\Category_Products  $category_Products
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CategoryProducts $category_Products,int $id)
+    public function update(Request $request, CategoryProducts $category_Products, int $id)
     {
         // dd($request->all());
         $dataCate = CategoryProducts::where('cate_id', $id)->first();
@@ -115,9 +127,14 @@ class CategoryProductsController extends Controller
      * @param  \App\Models\Category_Products  $category_Products
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CategoryProducts $category_Products , int $id)
+    public function destroy(CategoryProducts $category_Products, int $id)
     {
-        DB::table('category_products')->where('cate_id', $id)->delete();
-        return redirect()->route('category')->with('success', 'Thành công');
+        $user = Auth::user();
+        $status = json_decode($user->is_active, true);
+        if ($user->role == 1 || isset($status['delete'])) {
+            DB::table('category_products')->where('cate_id', $id)->delete();
+            return redirect()->route('category')->with('success', 'Thành công');
+        }
+        return redirect()->back()->with('alert', 'Bạn chưa được cấp quyền chỉnh sửa');
     }
 }

@@ -22,7 +22,8 @@ class User extends Authenticatable
         'email',
         'password',
         'is_active',
-        'role'
+        'role',
+        'module'
     ];
 
     /**
@@ -57,5 +58,28 @@ class User extends Authenticatable
     public function getIsActiveNameAttribute()
     {
         return self::ROLES[$this->role];
+    }
+
+
+    const MODULE_PRODUCT = 2;
+    const MODULE_CUSTOMER = 3;
+    const MODULE_NOMAL =0;
+    const MODULE_ADMIN =1 ;
+    const MODULES_ARR = [
+        self::MODULE_CUSTOMER,
+        self::MODULE_PRODUCT,
+        self::MODULE_NOMAL,
+        self::MODULE_ADMIN,
+    ];
+    const MODULES = [
+        self::MODULE_CUSTOMER => 'Khách hàng',
+        self::MODULE_PRODUCT => 'Sản phẩm',
+        self::MODULE_NOMAL => 'Người mới',
+        self::MODULE_ADMIN => 'Admin'
+    ];
+
+    public function getModuleNameAttribute()
+    {
+        return self::MODULES[$this->module];
     }
 }

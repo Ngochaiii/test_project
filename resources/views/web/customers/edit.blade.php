@@ -53,8 +53,8 @@
                         <hr>
                         <p class="text-right mb-0">
                             @if ($form_data->id)
-                                <button class="btn btn-danger"
-                                    formaction="">Xóa</button>
+                                <a href="{{route('customers.cancel',$form_data->id)}}" class="btn btn-danger"
+                                    formaction="">Xóa</a>
                             @endif
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </p>

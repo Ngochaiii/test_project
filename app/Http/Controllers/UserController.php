@@ -7,6 +7,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 
+use function PHPUnit\Framework\isEmpty;
+
 class UserController extends Controller
 {
     public static function getFilters(array $request = [])
@@ -58,35 +60,29 @@ class UserController extends Controller
     }
     public function change(Request $request,int $id)
     {
-        $data = array();
-        $status = $request->all();
+        if (empty($request->product) && empty($request->customer)) {
+            return redirect()->back()->with('alert', 'Bạn cần chọn tính năng cho người dùng sử dụng');
+        }
+        $dataIsActive = array();
+        $dataModule = array();
         // dd($request->all(),array_values($status));
-        $data = $status;
-        // dd($data);
+        $dataIsActive = ['add'=>$request->add,'edit'=>$request->edit,'delete'=>$request->delete];
+        $dataModule = ['product'=>$request->product,'customer'=>$request->customer];
+        // dd($dataIsActive,$dataModule);
         $user = auth()->user()->role;
         if ( $user != 1 ) {
             return redirect()->back()->with('alert', 'Bạn chưa được cấp quyền chỉnh sửa');
         }
         $user = self::findUser($id);
         if($user) {
-            $user->is_active = json_encode($data);
+            $user->is_active = json_encode($dataIsActive);
+            $user->module =json_encode($dataModule);
             $user->save();
             return redirect()->route('users')->with('success', 'Thành công');
         }
     }
     public function delete(int $id)
     {
-        $user = auth()->user()->role;
-        $user_active = auth()->user()->is_active;
-        if ( $user != 1 ) {
 
-            return redirect()->back()->with('alert', 'Bạn chưa được cấp quyền chỉnh sửa');
-        }
-        $user = self::findUser($id);
-        if($user) {
-            $user->is_active = 0;
-            $user->save();
-            return redirect()->route('users')->with('success', 'Thành công');
-        }
     }
 }

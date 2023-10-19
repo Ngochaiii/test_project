@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
                 'password' => bcrypt('admin123'),
                 'role' => '1',
                 'is_active' => '1',
+                'module' => json_encode(['1']),
             ]
         ]);
         for ($i = 2; $i <= 5; $i++) {
@@ -30,6 +31,7 @@ class DatabaseSeeder extends Seeder
                     'password' => bcrypt('admin123'),
                     'role' => '0',
                     'is_active' => '0',
+                    'module' => json_encode(['0']),
                 ]
             ]);
         }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CustommerController extends Controller
 {
@@ -163,10 +164,10 @@ class CustommerController extends Controller
         if ($user->role == 1 || isset($status['delete'])) {
             $customer = self::findCustomer($id);
             if ($customer) {
-                $customer->status = 2;
-                $customer->save();
+                DB::table('custommers')->where('id', $id)->delete();
                 return redirect()->route('customers')->with('success', 'Thành công');
             }
         }
+        return redirect()->back()->with('alert', 'Bạn chưa được cấp quyền chỉnh sửa');
     }
 }

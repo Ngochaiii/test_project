@@ -7,6 +7,7 @@ use App\Models\Products;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ProductsController extends Controller
@@ -124,14 +125,20 @@ class ProductsController extends Controller
      */
     public function show(Products $products, Request $request)
     {
-        $filters = self::getFilters($request->toArray());
-        $categories = CategoryProducts::with('products')->latest()->get();
-        $compacts = [
-            "products" => self::getProduct($filters),
-            "filters" => $filters,
-            "categories" => $categories
-        ];
-        return view('web.products.list', $compacts);
+        $user = Auth::user();
+        $status = json_decode($user->is_active, true);
+        // dd($status);
+        if ($user->role == 1 || isset($status['add'])) {
+            $filters = self::getFilters($request->toArray());
+            $categories = CategoryProducts::with('products')->latest()->get();
+            $compacts = [
+                "products" => self::getProduct($filters),
+                "filters" => $filters,
+                "categories" => $categories
+            ];
+            return view('web.products.list', $compacts);
+        }
+        return redirect()->back()->with('alert', 'Bạn chưa được cấp quyền chỉnh sửa');
     }
 
     /**
@@ -142,17 +149,22 @@ class ProductsController extends Controller
      */
     public function edit(Products $products, int $id)
     {
-        $product = self::findProduct($id);
-        if (!$product) {
-            abort(404);
-        } //end if
-        $categories = CategoryProducts::with('products')->latest()->get();
-        $compacts = [
+        $user = Auth::user();
+        $status = json_decode($user->is_active, true);
+        if ($user->role == 1 || isset($status['edit'])) {
+            $product = self::findProduct($id);
+            if (!$product) {
+                abort(404);
+            } //end if
+            $categories = CategoryProducts::with('products')->latest()->get();
+            $compacts = [
 
-            "categories" => $categories,
-            'products' => $product
-        ];
-        return view('web.products.detail', $compacts);
+                "categories" => $categories,
+                'products' => $product
+            ];
+            return view('web.products.detail', $compacts);
+        }
+        return redirect()->back()->with('alert', 'Bạn chưa được cấp quyền chỉnh sửa');
     }
 
     /**
@@ -212,7 +224,12 @@ class ProductsController extends Controller
      */
     public function destroy(Products $products, int $id)
     {
-        DB::table('products')->where('product_id', $id)->delete();
-        return redirect()->route('product.list')->with('success', 'Thành công');
+        $user = Auth::user();
+        $status = json_decode($user->is_active, true);
+        if ($user->role == 1 || isset($status['delete'])) {
+            DB::table('products')->where('product_id', $id)->delete();
+            return redirect()->route('product.list')->with('success', 'Thành công');
+        }
+        return redirect()->back()->with('alert', 'Bạn chưa được cấp quyền chỉnh sửa');
     }
 }
