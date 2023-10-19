@@ -70,12 +70,14 @@ Route::group(['prefix' => '', 'middleware' => 'checklogin'], function () {
         Route::post('/{key}/edit', [CustommerController::class, 'update'])->name('customers.update');
         Route::post('/{key}/delete', [CustommerController::class, 'delete'])->name('customers.delete');
     });
-    Route::group(['prefix' => 'users'], function () {
-        Route::get('/', [UserController::class, 'index'])->name('users');
-        Route::post('/change/{id}', [UserController::class, 'change'])->name('grant_benefits');
-        Route::get('/delete/{id}', [UserController::class, 'delete'])->name('delete_grant_benefits');
-        Route::get('/mail', [TaskController::class, 'index'])->name('index');
-        Route::post('/task', [TaskController::class, 'store'])->name('store.task');
-        Route::delete('/task/{id}', [TaskController::class, 'delete'])->name('delete.task');
+    Route::group(['middleware' => ['admin']], function () {
+        Route::group(['prefix' => 'users'], function () {
+            Route::get('/', [UserController::class, 'index'])->name('users');
+            Route::post('/change/{id}', [UserController::class, 'change'])->name('grant_benefits');
+            Route::get('/delete/{id}', [UserController::class, 'delete'])->name('delete_grant_benefits');
+            Route::get('/mail', [TaskController::class, 'index'])->name('index');
+            Route::post('/task', [TaskController::class, 'store'])->name('store.task');
+            Route::delete('/task/{id}', [TaskController::class, 'delete'])->name('delete.task');
+        });
     });
 });
