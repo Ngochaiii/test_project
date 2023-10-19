@@ -8,7 +8,7 @@
             </div>
             <div class="subText">
                 <div class="subTexts">
-                    <p class="subscribe">Subscribe to our newsletter</p>
+                    <p class="subscribe">Chúc Mọi Người Một Ngày Hiệu Quả</p>
                     <p class="soon">We are launching soon</p>
                 </div>
             </div>
@@ -17,7 +17,7 @@
         <div class="form">
             <form action="" class="sub">
                 <input class='email' type="email">
-                <button class="button" value="Send">Subscribe</button>
+                <button class="button" value="Send">This is nice day</button>
             </form>
         </div>
 
